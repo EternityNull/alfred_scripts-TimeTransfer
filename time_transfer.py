@@ -41,11 +41,19 @@ def judge_input(input_arg: str):
     else:
         exit(1)
 
+    prefix = "前"
     diff_days = (date_now - input_datetime).days
     diff_secs = (date_now - input_datetime).seconds
 
-    subtitle_to_display = "距离当前时间 [%s] 天 + [%s] 秒" % (
-        diff_days, diff_secs)
+    if date_now < input_datetime:
+        prefix = "后"
+        diff_days = (input_datetime - date_now).days
+        diff_secs = (input_datetime - date_now).seconds
+
+    subtitle_to_display = "距离当前时间 %s [%s] 天 + [%s] 秒" % (
+        prefix,
+        diff_days,
+        diff_secs)
 
     return Alfred(title_to_display, subtitle_to_display, result_to_display).__dict__
 
@@ -55,16 +63,34 @@ def judge_now():
 
     display_list = list()
 
-    # 日期格式 dict
+    # 日期格式 long
     display_list.append(
         Alfred(
             title=date_now.strftime("%Y-%m-%d %H:%M:%S"),
-            subtitle='日期格式',
+            subtitle='Long日期格式',
             arg=date_now.strftime("%Y-%m-%d %H:%M:%S")
         ).__dict__
     )
 
-    # 时间戳格式 dict
+    # 日期格式 short
+    display_list.append(
+        Alfred(
+            title=date_now.strftime("%Y/%m/%d %H/%M/%S"),
+            subtitle='传统日期格式',
+            arg=date_now.strftime("%Y/%m/%d %H/%M/%S")
+        ).__dict__
+    )
+
+    # 日期格式 short
+    display_list.append(
+        Alfred(
+            title=date_now.strftime("%Y%m%d%H%M%S"),
+            subtitle='Short日期格式',
+            arg=date_now.strftime("%Y%m%d%H%M%S")
+        ).__dict__
+    )
+
+    # 时间戳格式
     display_list.append(
         Alfred(
             title=int(date_now.timestamp()),
